@@ -11,7 +11,8 @@ export default function Users(){
       Last_Name: string,
       Email: string,
       Date_of_Birth: string,
-      Password: string;
+      Password: string,
+      Last_Login: string
     };
     const [users, setUsers] = useState<User[]>([]);
     const [showForm, setShowForm] = useState(false);
@@ -40,6 +41,7 @@ export default function Users(){
     const [adding_Editing, setAdding_Editing] = useState(true);
     const [search_Input, setSearch_Input] = useState('');
     const [option_Value, setOption_Value] = useState('');
+    const [exist, setExist] = useState(false);
 
     const Default_form = {
       Customer_Number: '',
@@ -54,7 +56,7 @@ export default function Users(){
 
     const getUsers =()=>{
       axios.get('https://jubilant-halibut-5gqx9r7p556q24vpq-8000.app.github.dev/users')
-        .then(res=> {const newUsers = res.data.message.map((user:any)=>({
+        .then(res=> {const newUsers = res.data.message.map((user:User)=>({
           ...user,
           Customer_Number: String(user.Customer_Number).padStart(5, '0'),
           Date_of_Birth: user.Date_of_Birth.split("T")[0].split("-").reverse().join("."),
@@ -66,22 +68,21 @@ export default function Users(){
     
     useEffect(() => {
       getUsers();
-    }, []);
+    },[]);
     
-    const search = (option_Value:any, search_Input:any) =>{
+    const search = (option_Value:string, search_Input:string) =>{
       if(option_Value === 'All'){
         getUsers();
       }else{
         const o_v  = option_Value as keyof User;
-        var Exist = false;
-        for(var i = 0; i<users.length; i++){
+        for(let i = 0; i<users.length; i++){
           if(users[i][o_v] === search_Input){
             setUsers([users[i]]);
-            Exist = true;
+            setExist(true);
             break;
           }
         }
-        if(Exist === false) setUsers([]);
+        if(exist === false) setUsers([]);
       }
     }
 
@@ -90,8 +91,8 @@ export default function Users(){
       setAdding_Editing(true);
     }
 
-    const handleEditUser = (Username: any) => {
-      for(var i=0; i< users.length;i++){
+    const handleEditUser = (Username: string) => {
+      for(let i=0; i< users.length;i++){
         if(Username === users[i].Username){
           setPrev_Form({...users[i], Repeat_Password: users[i].Password});
           setForm({...users[i], Repeat_Password: users[i].Password});
@@ -102,7 +103,7 @@ export default function Users(){
       setAdding_Editing(false);
     }
 
-    const handleDeleteUser = (c_n: any) => {
+    const handleDeleteUser = (c_n: string) => {
       try{
         console.log(c_n, `https://jubilant-halibut-5gqx9r7p556q24vpq-8000.app.github.dev/deleteUser/${c_n}`)
         axios.delete(`https://jubilant-halibut-5gqx9r7p556q24vpq-8000.app.github.dev/deleteUser/${c_n}`)
@@ -114,19 +115,19 @@ export default function Users(){
       }
     }
 
-    const handleChange = (event:any) => {
+    const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
       setForm({...form, [event.target.name]: event.target.value});
     }
 
-    var pattern =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    var dateFormat = /^(\d{2})\.(\d{2})\.(\d{4})$/;
+    const pattern =  /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    const dateFormat = /^(\d{2})\.(\d{2})\.(\d{4})$/;
 
     const handleSubmit = () => {
       try{
         if(adding_Editing){
-          var unique = true;
-          var len = false;
-          for (var i=0; i<users.length; i++){
+          let unique = true;
+          let len = false;
+          for (let i=0; i<users.length; i++){
             if(users[i].Customer_Number === form.Customer_Number || users[i].Username === form.Username){
               alert('Customer Number or Username exists');
               unique = false;
@@ -142,7 +143,7 @@ export default function Users(){
           console.log(len, unique, pattern.test(form.Email), dateFormat.test(form.Date_of_Birth));
           if (len && unique && pattern.test(form.Email) && dateFormat.test(form.Date_of_Birth)){
             if (form.Password === form.Repeat_Password){
-              var convertedDate = form.Date_of_Birth.split(".").reverse().join("-");
+              const convertedDate = form.Date_of_Birth.split(".").reverse().join("-");
               form.Date_of_Birth = convertedDate;
               const {Repeat_Password, ...Newform} = form;
               axios.post('https://jubilant-halibut-5gqx9r7p556q24vpq-8000.app.github.dev/addUser', Newform)
@@ -155,15 +156,15 @@ export default function Users(){
             alert('Format is not right!')
           }
         }else{
-          var unique = true;
-          var len = false;
+          let unique = true;
+          let len = false;
           if(prev_Form === form){
             alert('nothing has been updated');
           }else if(prev_Form.Username != form.Username){
             alert('Username cant be edited');
           }else {
             if(prev_Form.Customer_Number != form.Customer_Number){
-              for (var i=0; i<users.length; i++){
+              for (let i=0; i<users.length; i++){
                 if(users[i].Customer_Number === form.Customer_Number){
                   alert('Customer Number exists');
                   unique = false;
@@ -178,7 +179,7 @@ export default function Users(){
             }
             if (len && unique && pattern.test(form.Email) && dateFormat.test(form.Date_of_Birth)){
               if (form.Password === form.Repeat_Password){
-                var convertedDate = form.Date_of_Birth.split(".").reverse().join("-");
+                const convertedDate = form.Date_of_Birth.split(".").reverse().join("-");
                 form.Date_of_Birth = convertedDate;
                 const {Repeat_Password, ...Newform} = form;
                 axios.put('https://jubilant-halibut-5gqx9r7p556q24vpq-8000.app.github.dev/editUser', Newform)
@@ -258,7 +259,7 @@ export default function Users(){
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map((user: any) => ( 
+            {sortedUsers.map((user) => ( 
               <tr key={user.Customer_Number}>
                 <td>{user.Customer_Number}</td>
                 <td>{user.Username}</td>

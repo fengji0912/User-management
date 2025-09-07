@@ -43,7 +43,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (00001,'hong_lu','hong','lu','123qwe@126.com','2001-01-20','12345678',NULL),(00002,'ssss','ssss','ssss','123qwe@126.com','2001-01-20','12345678',NULL),(02221,'aaa','aaa','aaas','3323qwe@126.com','2001-01-20','12345678',NULL),(12212,'qqq2','qq1','ww1','123qwe@126.com','2020-01-20','12345678',NULL),(12218,'qqq211','qq','ww','123qwe@126.com','2020-01-20','12345678',NULL),(12222,'qqq211qq','qq','ww','123qwe@126.com','2020-01-20','12345678',NULL),(12263,'bbbw','qq','ww','123qwe@126.com','2020-01-20','12345678',NULL),(12264,'bbbwew','qq','ww','123qwe@126.com','2020-01-20','12345678',NULL);
+INSERT INTO `users` VALUES (00001,'hong_lu','hong','lu','123qwe@126.com','2001-01-20','12345678',NULL),(00002,'ssss','ssss','ssss','123qwe@126.com','2001-01-20','12345678',NULL),(00003,'sssaa','sssssas','ssssxsa','123qwe@126.com','2001-01-20','12345678',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-07 15:47:45
+-- Dump completed on 2025-09-07 17:55:36
